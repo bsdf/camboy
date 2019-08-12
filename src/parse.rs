@@ -1,4 +1,4 @@
-use crate::image::Photo;
+use crate::img::Photo;
 
 use std::{
     fs::File,

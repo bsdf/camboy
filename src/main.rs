@@ -1,4 +1,4 @@
-mod image;
+mod img;
 mod parse;
 
 use std::{fs::File, io::Result, path::PathBuf};
@@ -33,12 +33,12 @@ fn main() -> Result<()> {
     match opt.picture_index {
         Some(idx) => {
             // user provided a picture index
-            image::save_photo(&file, idx, get_filename(&opt.output_format, idx))
+            img::save_photo(&file, idx, get_filename(&opt.output_format, idx))
         }
         None => {
             // no picture index, dump all pictures
             (0..30)
-                .map(|i| image::save_photo(&file, i, get_filename(&opt.output_format, i)))
+                .map(|i| img::save_photo(&file, i, get_filename(&opt.output_format, i)))
                 .collect()
         }
     }
