@@ -45,5 +45,5 @@ fn main() -> Result<()> {
 }
 
 fn get_filename(format: &str, idx: usize) -> String {
-    format.replace("%", &format!("{:02}", idx)) + ".bmp"
+    format.replace("%", &format!("{:02}", idx)) + ".png"
 }

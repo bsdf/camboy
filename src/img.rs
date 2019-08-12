@@ -1,21 +1,21 @@
 use crate::parse;
 
 use std::{fs::File, io::Result};
-use bmp::{px, Image, Pixel};
+use image::{RgbImage, Rgb};
+
+const PIXELS: [Rgb<u8>; 4] = [
+    image::Rgb([0xff, 0xff, 0xff]),
+    image::Rgb([0xaa, 0xaa, 0xaa]),
+    image::Rgb([0x55, 0x55, 0x55]),
+    image::Rgb([0, 0, 0]),
+];
 
 const WIDTH_LARGE: u32 = 128;
 // const WIDTH_SMALL: u32 = 32;
 const HEIGHT_LARGE: u32 = 112;
 // const HEIGHT_SMALL: u32 = 32;
 
-const PIXELS: [Pixel; 4] = [
-    px!(0xff, 0xff, 0xff),
-    px!(0xaa, 0xaa, 0xaa),
-    px!(0x55, 0x55, 0x55),
-    px!(0, 0, 0),
-];
-
-type Row = Vec<Pixel>;
+type Row = Vec<Rgb<u8>>;
 
 #[derive(Debug, Hash)]
 pub struct Photo {
@@ -36,9 +36,9 @@ pub fn save_photo(file: &File, idx: usize, out_filename: String) -> Result<()> {
     img.save(out_filename)
 }
 
-fn create_image(photo: Photo) -> Image {
+fn create_image(photo: Photo) -> RgbImage {
     let tiles = get_tiles(photo.large);
-    let mut img = Image::new(WIDTH_LARGE, HEIGHT_LARGE);
+    let mut img = RgbImage::new(WIDTH_LARGE, HEIGHT_LARGE);
 
     for tile in &tiles {
         write_tile(&mut img, tile);
@@ -47,7 +47,7 @@ fn create_image(photo: Photo) -> Image {
     img
 }
 
-fn write_tile(img: &mut Image, tile: &Tile) {
+fn write_tile(img: &mut RgbImage, tile: &Tile) {
     let tile_col: u32 = u32::from(tile.idx) % 16;
     let tile_row: u32 = u32::from(tile.idx) / 16;
     let x_offset = tile_col * 8;
@@ -56,7 +56,7 @@ fn write_tile(img: &mut Image, tile: &Tile) {
     for y in 0..(tile.rows.len()) {
         let row = &tile.rows[y];
         for (x, &pixel) in row.iter().enumerate() {
-            img.set_pixel(x_offset + x as u32, y_offset + y as u32, pixel);
+            img.put_pixel(x_offset + x as u32, y_offset + y as u32, pixel);
         }
     }
 }
@@ -89,7 +89,7 @@ fn get_rows(data: &[u8]) -> Vec<Row> {
         .collect()
 }
 
-fn get_pixel(b1: u8, b2: u8, idx: u8) -> Pixel {
+fn get_pixel(b1: u8, b2: u8, idx: u8) -> Rgb<u8> {
     let mask = 0x80 >> idx;
     let pixel_idx = match (b1 & mask != 0, b2 & mask != 0) {
         (false, false) => 0,

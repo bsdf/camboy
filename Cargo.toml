@@ -6,4 +6,5 @@ edition = "2018"
 
 [dependencies]
 bmp = "*"
+image = "0.22"
 structopt = "0.2"
