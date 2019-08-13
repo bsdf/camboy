@@ -5,8 +5,8 @@ use std::{fs::File, io::Result, path::PathBuf};
 use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
-#[structopt(name = "CAMBOY")]
-/// camboy's about string maybbe
+#[structopt(name = "CAM BOY", author = "")]
+/// CAM BOY takes a GAME BOY camera save file dump and extracts the images from it.
 struct Opt {
     #[structopt(name = "picture number", short = "i", long = "index")]
     /// dump a single picture, indexed by 0.
@@ -16,13 +16,13 @@ struct Opt {
         name = "format",
         short = "o",
         long = "out",
-        default_value = "picture-%"
+        default_value = "CAMBOY%"
     )]
     /// filename output format. the '%' character will be replaced with the picture number.
     output_format: String,
 
     #[structopt(name = "INPUT", parse(from_os_str))]
-    /// the gameboy camera save file dump.
+    /// the GAME BOY camera save file dump.
     input_file: PathBuf,
 }
 
